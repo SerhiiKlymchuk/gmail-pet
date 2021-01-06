@@ -7,7 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class GmailPetApplication {
 
     public static void main(String[] args) {
-
         SpringApplication.run(GmailPetApplication.class, args);
     }
 
