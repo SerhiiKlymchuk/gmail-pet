@@ -16,7 +16,7 @@ public class ApplicationErrorController implements ErrorController {
         Integer statusCode = (Integer) req.getAttribute("javax.servlet.error.status_code");
         Exception exception = (Exception) req.getAttribute("javax.servlet.error.exception");
 
-        model.addAttribute("statusCode",statusCode==null ? "N/A": statusCode);
+        model.addAttribute("statusCode",statusCode);
         model.addAttribute("errorMessage", exception==null ? "N/A": exception.getMessage());
 
         return "error/error";
