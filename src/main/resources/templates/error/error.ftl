@@ -9,7 +9,18 @@
 </head>
 <body>
     <h2>Error Page</h2>
-    <div>Status code: <b> ${(statusCode)!"N/A"} </b> </div>
-    <div> Error Message: <b> ${errorMessage} </b> </div>
+
+    <div>Status code:
+        <b> ${(statusCode)!"N/A"} </b>
+    </div>
+
+    <div> Error Message:
+        <b>
+            <#if (errorMessage)??>
+                ${errorMessage.getMessage()}
+            <#else> N/A
+            </#if>
+        </b>
+    </div>
 </body>
 </html>
