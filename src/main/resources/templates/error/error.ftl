@@ -16,8 +16,8 @@
 
     <div> Error Message:
         <b>
-            <#if (errorMessage)??>
-                ${errorMessage.getMessage()}
+            <#if (error)??>
+                ${error.getMessage()}
             <#else> N/A
             </#if>
         </b>
