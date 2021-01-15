@@ -2,4 +2,8 @@ spring:
   freemarker:
     template-loader-path: "classpath:/templates"
     suffix: ".ftl"
-
+  datasource:
+    url: jdbc:postgresql://localhost:7777/gmail
+    driver-class-name: org.postgresql.Driver
+    password: 2905
+    username: postgres
