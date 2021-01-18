@@ -10,37 +10,38 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter{
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
+
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public SecurityConfig(@Qualifier("userServiceImpl") UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder, BCryptPasswordEncoder bCryptPasswordEncoder1) {
+    public SecurityConfig(@Qualifier("userServiceImpl") UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userDetailsService = userDetailsService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder1;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-         http
-                 .authorizeRequests()
-                 .antMatchers( "/user/**" ,"/", "/js/**", "/css/**", "/images/**").permitAll()
+        http
+                .authorizeRequests()
+                .antMatchers("/user/**", "/", "/js/**", "/css/**", "/images/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                 .formLogin()
+                .formLogin()
                 .loginPage("/login")
-                 .defaultSuccessUrl("/user/home", true)
-                 .permitAll()
+                .defaultSuccessUrl("/user/home", true)
+                .permitAll()
                 .and()
-                 .logout()
-                 .permitAll()
+                .logout()
+                .permitAll()
                 .and()
-                 .csrf();
+                .csrf();
     }
 
     @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
 
