@@ -1,29 +1,24 @@
 package com.serhiiklymchuk.gmailpet.controller;
 
-import com.serhiiklymchuk.gmailpet.domain.User;
-import com.serhiiklymchuk.gmailpet.service.impl.UserServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import static java.util.Objects.nonNull;
 
 @Controller
-@RequestMapping("/login")
-public class LoginController {
-    @Autowired
-    UserServiceImpl userService;
+public class LoginController{
 
-    @GetMapping
-    public String getLoginPage(){
+    @GetMapping("/login")
+    public String getLoginPage(Model model, String error, String logout){
+
+        if (nonNull(error)) {
+            model.addAttribute("errorMessage", "Incorrect username or password!!");
+        }
+        if (nonNull(logout))
+            model.addAttribute("logoutMessage", "You've successfully logged out!");
+
         return "login/login";
+
     }
-
-    @PostMapping
-    public String tryLogin(@RequestParam("username") String username, RedirectAttributes attr){
-        User user = userService.findByUsername(username);
-        attr.addFlashAttribute("user", user);
-
-        return "redirect:user/home";
-    }
-
 }

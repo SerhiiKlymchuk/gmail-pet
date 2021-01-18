@@ -12,6 +12,13 @@
         <h3>Login</h3>
         <p>Go to Gmail!</p>
 
+        <#if logoutMessage??>
+            <div class="form_alert_message success" role="alert">&#10004; ${logoutMessage}</div>
+        </#if>
+        <#if errorMessage??>
+            <div class="form_alert_message failure" role="alert">&#9888; ${errorMessage}</div>
+        </#if>
+
         <div id="username-box">
             <input type="text"  id="username" name="username" placeholder="user.name">
             <p id="domain-placeholder">@gmail.com</p>

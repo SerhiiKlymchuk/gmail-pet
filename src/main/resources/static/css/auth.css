@@ -22,6 +22,19 @@
     margin-top: 30px;
 }
 
+.form_alert_message{
+    /* for future implmentations*/
+}
+
+.failure{
+    color: red;
+}
+
+.success{
+    color: green;
+}
+
+
 .login p{
     padding-bottom: 15px;
 }
@@ -38,9 +51,11 @@
 #first_name, #last_name{
     width: 39.6%;
 }
+
 #username-box{
     position: relative;
 }
+
 #domain-placeholder{
     position: absolute;
     right: 15%;

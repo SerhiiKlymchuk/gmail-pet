@@ -26,4 +26,5 @@ public class ApplicationErrorController implements ErrorController {
     public String getErrorPath() {
         return "/error";
     }
+
 }

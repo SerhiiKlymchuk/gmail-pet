@@ -6,13 +6,14 @@
 </head>
 <body>
 <h3>Welcome, to Gmail!</h3>
-<#if user??>
-    <h3>Hello, ${user.username}@gmail.com</h3>
-    <a href="/logout">Log out!</a>
-<#else>
-    <b>You're not logged in!!</b>
-    <a href="/login">Log in!</a>
-</#if>
+
+<#--This ftl is unnecessary for this PR-->
+<#--Only for demonstration purpposes-->
+
+    <form action="/logout" method="POST">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/><br>
+        <button type="submit">Logout</button>
+    </form>
 
 
 

@@ -4,13 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.data.annotation.Id;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.NonNullFields;
-
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Data
@@ -18,6 +13,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Builder
 public class UserDto {
+
     @Id
     private Long id;
 
@@ -36,4 +32,5 @@ public class UserDto {
     @NotNull
     @NotBlank
     private String password;
+
 }

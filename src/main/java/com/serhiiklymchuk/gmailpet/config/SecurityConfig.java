@@ -11,28 +11,37 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
-    @Autowired
-    @Qualifier("userServiceImpl")
-    private UserDetailsService userDetailsService;
 
-    public BCryptPasswordEncoder bCryptPasswordEncoder(){
-        return new BCryptPasswordEncoder();
+    private final UserDetailsService userDetailsService;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public SecurityConfig(@Qualifier("userServiceImpl") UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder, BCryptPasswordEncoder bCryptPasswordEncoder1) {
+        this.userDetailsService = userDetailsService;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder1;
     }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-         http.authorizeRequests()
+         http
+                 .authorizeRequests()
                  .antMatchers( "/user/**" ,"/", "/js/**", "/css/**", "/images/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                  .formLogin()
                 .loginPage("/login")
-                 .loginProcessingUrl("/login/process")
-                 .permitAll();
+                 .defaultSuccessUrl("/user/home", true)
+                 .permitAll()
+                .and()
+                 .logout()
+                 .permitAll()
+                .and()
+                 .csrf();
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception{
-        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
     }
+
 }
