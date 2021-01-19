@@ -8,7 +8,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 
@@ -22,18 +21,13 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/home")
-    public String getHome() {
-        return "user/home";
-    }
-
     @GetMapping("/register")
     public String getRegistrationPage() {
         return "user/register";
     }
 
     @PostMapping("/register")
-    public String createUser(@Valid UserDto userDto, BindingResult bindingResult, RedirectAttributes attr, Model model) {
+    public String createUser(@Valid UserDto userDto, BindingResult bindingResult, Model model) {
 
         if (bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
@@ -41,9 +35,7 @@ public class UserController {
         }
 
         userService.createUser(userDto);
-        attr.addFlashAttribute("user", userDto);
-
-        return "redirect: home";
+        return "redirect:/messages/inbox";
     }
 
 }
