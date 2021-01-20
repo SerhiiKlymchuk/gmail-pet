@@ -23,6 +23,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
+    public User findById(Long id) {
+        return userRepository
+                .findById(id)
+                .orElseThrow(() -> new RuntimeException("User was not found!!"));
+    }
+
     @Override
     public User loadUserByUsername(String username) throws UsernameNotFoundException {
 

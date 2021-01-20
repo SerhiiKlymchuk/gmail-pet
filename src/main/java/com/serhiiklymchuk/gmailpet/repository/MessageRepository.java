@@ -8,8 +8,7 @@ import java.util.Optional;
 
 public interface MessageRepository extends CrudRepository<Message, Long> {
 
-    Optional<List<Message>> findAllByReceiverUserId(Long receiverUserId);
+    Optional<List<Message>> findAllByReceiverUserIdOrderByDateDesc(Long receiverUserId);
 
-    Optional<List<Message>> findAllByOwnerUserId(Long ownerUserId);
-
+    Optional<List<Message>> findAllBySenderUserIdOrderByDateDesc(Long senderUserId);
 }

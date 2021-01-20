@@ -1,4 +1,4 @@
-package com.serhiiklymchuk.gmailpet.domain;
+package com.serhiiklymchuk.gmailpet.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,17 +9,17 @@ import org.springframework.data.annotation.Id;
 import java.time.LocalDateTime;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class Message {
+@AllArgsConstructor
+@Builder
+public class MessageDto {
 
     @Id
     private Long id;
 
-    private Long senderUserId;
+    private String senderUsername;
 
-    private Long receiverUserId;
+    private String receiverUsername;
 
     private String subject;
 
