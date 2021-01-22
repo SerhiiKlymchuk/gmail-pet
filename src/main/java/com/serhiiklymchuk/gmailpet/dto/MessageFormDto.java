@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
@@ -23,5 +22,4 @@ public class MessageFormDto {
     @NotBlank
     private String content;
 
-    private LocalDateTime date;
 }

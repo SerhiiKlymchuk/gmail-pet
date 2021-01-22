@@ -21,7 +21,8 @@
 
                     <p class="subject">${msg.subject}</p>
 
-                    <p class="content">${(msg.content?length > 50) ? then(msg.content?substring(0, 50), msg.content)}...
+                    <p class="content">
+                        ${(msg.content?length > 50) ? then(msg.content?substring(0, 50)+'...', msg.content)}
                     </p>
                     <p class="date">${msg.date.hour}:${msg.date.minute}</p>
                 </li>

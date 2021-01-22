@@ -7,15 +7,13 @@ import com.serhiiklymchuk.gmailpet.service.impl.MessageServiceImpl;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.util.List;
-
-import static java.util.Objects.nonNull;
 
 @Controller
 @RequestMapping("/messages")
@@ -48,25 +46,16 @@ public class MessageController {
     }
 
     @GetMapping("/new")
-    public String getNewMessage(Model model, String error) {
-
-        if (nonNull(error)) {
-            model.addAttribute("error", error);
-        }
-
+    public String getNewMessage(Model model) {
         return "messages/new";
     }
 
     @PostMapping("/new")
-    public String createMessage(@AuthenticationPrincipal User user, @Valid MessageFormDto messageFormDto, BindingResult bindingResult) {
+    public String createMessage(@AuthenticationPrincipal User user, @Valid MessageFormDto messageFormDto, RedirectAttributes attr) {
 
-        if (bindingResult.hasErrors()) {
-            return "redirect:/messages/new?error=Fill Empty Fields!";
-        }
+        messageService.createMessage(messageFormDto, user.getId());
 
-        if (!messageService.createMessage(messageFormDto, user.getId())) {
-            return "redirect:/messages/new?error=Receiver Not Found!";
-        }
+        attr.addFlashAttribute("messageSuccess", "Message Was Sent Successfully!!!");
 
         return "redirect:/messages/outbox";
     }

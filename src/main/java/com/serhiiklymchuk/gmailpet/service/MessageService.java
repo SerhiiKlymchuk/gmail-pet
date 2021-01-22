@@ -4,6 +4,6 @@ import com.serhiiklymchuk.gmailpet.dto.MessageFormDto;
 
 public interface MessageService {
 
-    boolean createMessage(MessageFormDto messageFormDto, Long senderUserId);
+    void createMessage(MessageFormDto messageFormDto, Long senderUserId);
 
 }

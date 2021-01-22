@@ -10,6 +10,13 @@
 <#include "../include/sidebar.ftl">
 
 <div class="messages_box">
+
+    <#if messageSuccess??>
+        <li id="success">
+            <p>${messageSuccess}</p>
+        </li>
+    </#if>
+
     <ul>
         <#list outboxMessages as msg>
             <li class="message_item">
@@ -21,7 +28,8 @@
 
                 <p class="subject">${msg.subject}</p>
 
-                <p class="content">${(msg.content?length > 50) ? then(msg.content?substring(0, 50), msg.content)}...
+                <p class="content">
+                    ${(msg.content?length > 50) ? then(msg.content?substring(0, 50) + '...', msg.content)}
                 </p>
                 <p class="date">${msg.date.hour}:${msg.date.minute}</p>
             </li>
