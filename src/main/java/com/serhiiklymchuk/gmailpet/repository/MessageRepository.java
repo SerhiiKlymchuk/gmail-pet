@@ -8,5 +8,6 @@ import java.util.List;
 public interface MessageRepository extends CrudRepository<Message, Long> {
 
     List<Message> findAllByReceiverUserIdOrderByDateDesc(Long receiverUserId);
+
     List<Message> findAllBySenderUserIdOrderByDateDesc(Long senderUserId);
 }

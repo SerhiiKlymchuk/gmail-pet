@@ -8,56 +8,41 @@ import com.serhiiklymchuk.gmailpet.exception.MessageException;
 import com.serhiiklymchuk.gmailpet.repository.MessageRepository;
 import com.serhiiklymchuk.gmailpet.repository.UserRepository;
 import com.serhiiklymchuk.gmailpet.service.MessageService;
+import com.serhiiklymchuk.gmailpet.util.mapper.MessageToMessageDtoMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-public
-class MessageServiceImpl implements MessageService {
+public class MessageServiceImpl implements MessageService {
 
     private final MessageRepository messageRepository;
 
-    private final UserServiceImpl userService;
-
     private final UserRepository userRepository;
 
-    public MessageServiceImpl(MessageRepository messageRepository, UserServiceImpl userService, UserRepository userRepository) {
+    private final MessageToMessageDtoMapper messageToMessageDtoMapper;
+
+    public MessageServiceImpl(MessageRepository messageRepository, UserRepository userRepository, MessageToMessageDtoMapper messageToMessageDtoMapper) {
         this.messageRepository = messageRepository;
-        this.userService = userService;
         this.userRepository = userRepository;
+        this.messageToMessageDtoMapper = messageToMessageDtoMapper;
     }
 
-    public List<MessageDto> getInboxMessages(User user) throws RuntimeException {
+    public List<MessageDto> getInboxMessages(User user) {
 
         List<Message> messages = messageRepository
                 .findAllByReceiverUserIdOrderByDateDesc(user.getId());
 
-        return messages.stream().map(msg -> MessageDto.builder()
-                .receiverUsername(userService.findById(msg.getReceiverUserId()).getUsername())
-                .senderUsername(userService.findById(msg.getSenderUserId()).getUsername())
-                .subject(msg.getSubject())
-                .content(msg.getContent())
-                .reviewed(msg.isReviewed())
-                .date(msg.getDate())
-                .build()).collect(Collectors.toList());
+        return messageToMessageDtoMapper.map(messages);
     }
 
-    public List<MessageDto> getOutboxMessages(User user) throws RuntimeException {
+    public List<MessageDto> getOutboxMessages(User user) {
 
         List<Message> messages = messageRepository
                 .findAllBySenderUserIdOrderByDateDesc(user.getId());
 
-        return messages.stream().map(msg -> MessageDto.builder()
-                .receiverUsername(userService.findById(msg.getReceiverUserId()).getUsername())
-                .senderUsername(userService.findById(msg.getSenderUserId()).getUsername())
-                .subject(msg.getSubject())
-                .content(msg.getContent())
-                .reviewed(msg.isReviewed())
-                .date(msg.getDate())
-                .build()).collect(Collectors.toList());
+        return messageToMessageDtoMapper.map(messages);
     }
 
     @Override
