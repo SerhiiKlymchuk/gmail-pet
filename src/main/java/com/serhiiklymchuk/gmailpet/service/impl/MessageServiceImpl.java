@@ -65,7 +65,7 @@ class MessageServiceImpl implements MessageService {
 
         User receiverUser = userRepository
                 .findByUsername(messageFormDto.getReceiverUsername())
-                .orElseThrow(()-> new MessageException("Receiver Was Not Found!!!"));
+                .orElseThrow(() -> new MessageException("Receiver Was Not Found!!!"));
 
         Message message = Message.builder()
                 .senderUserId(senderUserId)
