@@ -24,6 +24,7 @@ public class MessageServiceImpl implements MessageService {
     private final MessageToMessageDtoMapper messageToMessageDtoMapper;
 
     public MessageServiceImpl(MessageRepository messageRepository, UserRepository userRepository, MessageToMessageDtoMapper messageToMessageDtoMapper) {
+
         this.messageRepository = messageRepository;
         this.userRepository = userRepository;
         this.messageToMessageDtoMapper = messageToMessageDtoMapper;
@@ -34,7 +35,7 @@ public class MessageServiceImpl implements MessageService {
         List<Message> messages = messageRepository
                 .findAllByReceiverUserIdOrderByDateDesc(user.getId());
 
-        return messageToMessageDtoMapper.map(messages);
+        return messageToMessageDtoMapper.map(messages, user);
     }
 
     public List<MessageDto> getOutboxMessages(User user) {
@@ -42,7 +43,7 @@ public class MessageServiceImpl implements MessageService {
         List<Message> messages = messageRepository
                 .findAllBySenderUserIdOrderByDateDesc(user.getId());
 
-        return messageToMessageDtoMapper.map(messages);
+        return messageToMessageDtoMapper.map(messages, user);
     }
 
     @Override

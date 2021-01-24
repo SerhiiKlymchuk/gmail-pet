@@ -46,7 +46,7 @@ public class MessageController {
     }
 
     @GetMapping("/new")
-    public String getNewMessage(Model model) {
+    public String getNewMessage() {
         return "messages/new";
     }
 
