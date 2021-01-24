@@ -30,34 +30,29 @@ public class MessageToMessageDtoMapper {
                 .build();
     }
 
-    public List<MessageDto> map(List<Message> messages, User user) {
+    public List<MessageDto> map(List<Message> messages) {
+        List<User> users = (List<User>) userRepository.findAll();
 
         return messages.stream()
-                .map(m -> {
-                    if (user.getId().equals(m.getReceiverUserId())) {
-                        return map(m, user, m.getSenderUserId());
-                    }
-                    return map(m, m.getReceiverUserId(), user);
+                .map(msg -> {
+
+                    User receiverUser = users.stream()
+                            .filter(u -> u
+                                    .getId()
+                                    .equals(msg.getReceiverUserId()))
+                            .findFirst()
+                            .orElseThrow(() -> new RuntimeException("User not found!"));
+
+                    User senderUser = users.stream()
+                            .filter(u -> u
+                                    .getId()
+                                    .equals(msg.getSenderUserId()))
+                            .findFirst()
+                            .orElseThrow(() -> new RuntimeException("User not found!"));
+
+                    return map(msg, receiverUser, senderUser);
                 })
                 .collect(Collectors.toList());
-    }
-
-    private MessageDto map(Message message, User receiverUser, Long senderUserId) {
-
-        User senderUser = userRepository
-                .findById(senderUserId)
-                .orElseThrow(() -> new RuntimeException("User was not found!!"));
-
-        return map(message, receiverUser, senderUser);
-    }
-
-    private MessageDto map(Message message, Long receiverUserId, User senderUser) {
-
-        User receiverUser = userRepository
-                .findById(receiverUserId)
-                .orElseThrow(() -> new RuntimeException("User was not found!!"));
-
-        return map(message, receiverUser, senderUser);
     }
 
 }

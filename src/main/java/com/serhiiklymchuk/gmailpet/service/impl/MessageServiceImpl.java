@@ -35,7 +35,7 @@ public class MessageServiceImpl implements MessageService {
         List<Message> messages = messageRepository
                 .findAllByReceiverUserIdOrderByDateDesc(user.getId());
 
-        return messageToMessageDtoMapper.map(messages, user);
+        return messageToMessageDtoMapper.map(messages);
     }
 
     public List<MessageDto> getOutboxMessages(User user) {
@@ -43,7 +43,7 @@ public class MessageServiceImpl implements MessageService {
         List<Message> messages = messageRepository
                 .findAllBySenderUserIdOrderByDateDesc(user.getId());
 
-        return messageToMessageDtoMapper.map(messages, user);
+        return messageToMessageDtoMapper.map(messages);
     }
 
     @Override
