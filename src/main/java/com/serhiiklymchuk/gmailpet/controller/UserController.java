@@ -35,6 +35,7 @@ public class UserController {
         }
 
         userService.createUser(userDto);
+
         return "redirect:/messages/inbox";
     }
 

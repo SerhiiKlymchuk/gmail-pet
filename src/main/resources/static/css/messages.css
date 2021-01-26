@@ -1,0 +1,265 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    height: 100vh;
+    background-color: #202124;
+    color: #fff;
+    font-family: sans-serif;
+    overflow: hidden;
+}
+
+a{
+    text-decoration: none;
+    color:#fff;
+}
+
+li{
+    list-style-type: none;
+}
+
+/* ============== HEADER ==========*/
+header{
+    height: 60px;
+    width: 100%;
+    padding-left: 20px;
+    border-bottom: 1px solid #5f5e5e;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.header-logo, .header-options{
+    width: 150px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 23px;
+}
+
+.header-options>*, .header-logo>*{
+    cursor: pointer;
+}
+
+.header-options img{
+    width: 50px;
+    height: 50px;
+    border:1px solid #fff;
+    border-radius: 50%;
+}
+.logout_btn{
+    font-size: 26px;
+    width: 40px;
+    height: 61px;
+    color: #ffffff;
+    border: 0;
+    outline: none;
+    background: #cd2929;
+    cursor: pointer;
+    transition: background-color .3s linear;
+}
+
+.logout_btn:hover{
+    color: #cd2929;
+    background: #ffff;
+}
+/*========= SIDEBAR ==========*/
+
+aside{
+    height: 100%;
+    width: 18%;
+    border-right: 1px solid #5f5e5e;
+    padding-top: 15px;
+    position: absolute;
+    left: 0;
+}
+
+.menu{
+    padding: 0 10px;
+}
+
+.menu li{
+    font-size: 16px;
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 10px;
+    font-family: Arial;
+}
+
+.menu li:hover{
+    background-color: rgba(255,255,255,0.30);
+    border-radius: 5px;
+}
+
+
+#inbox .menu__inbox, #outbox .menu__outbox{
+    background-color: rgba(255,255,255,0.30);
+    border-radius: 5px;
+}
+
+.new_message_btn{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    width: 150px;
+    height: 40px;
+    margin: 0 0 15px 20px;
+    border-radius: 5%;
+    background: #fff;
+    color: #000000;
+    transition: filter .3s linear;
+}
+
+.new_message_btn:before{
+    content: "+";
+    font-size: 30px;
+    font-weight: 600;
+    font-family: "Roboto Light";
+}
+
+/*======= MESSAGES =======*/
+
+.messages_box{
+    position: absolute;
+    right: 0;
+    border: 1px solid red;
+    width: 82%;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.message_item{
+    width: 100%;
+    border-bottom: 1px solid #5f5e5e;
+    padding: 8px 5px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.message_item:hover{
+    box-shadow: 0px 0px 4px #ffffff;
+}
+
+.message_item__marks{
+    width: 20%;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+}
+
+.message_item__marks .sender{
+    padding-left: 15px;
+}
+
+.message_item .subject{
+    width: 25%;
+    text-align: left;
+}
+
+.message_item .content{
+    width: 50%;
+    text-align: left;
+}
+
+.message_item .date{
+    width: 5%;
+    text-align: left;
+}
+
+.message_item__marks .star, .message_item__marks .sender{
+    margin-left: 3%;
+}
+
+
+/*========= NEW MESSAGE ========*/
+.blur_wrapper{
+    height: 100vh;
+    filter: blur(2px);
+}
+
+#new_message_form, #error{
+    width: 400px;
+    height: 500px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    border: 1px solid #000000;
+    border-radius: 5px;
+    background-color: #ffffff;
+}
+
+#error{
+    height: 30px;
+    top: calc(50% - 250px - 15px);
+    background-color: #cd2929;
+}
+#error p, #success p{
+    padding: 5px;
+}
+
+#success{
+    height: 30px;
+    background-color: #3c8d5e;
+}
+
+.form_header{
+    width: 100%;
+    height: 10%;
+    background-color: #202124;
+    padding: 0 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.form_body{
+    width: 100%;
+    height: 80%;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.form_footer{
+    width: 100%;
+    height: 15%;
+}
+
+#form_send_to, #form_subject, #form_content{
+    width: 100%;
+    height: 10%;
+    border: 0;
+    padding: 0 3px;
+    border-bottom: 1px solid grey;
+    outline: none;
+}
+
+#form_content {
+    padding-top: 5px;
+    height: 80%;
+    resize: none;
+}
+
+#submit_btn{
+    width: 60px;
+    height: 30px;
+    margin: 2% 82%;
+    font-size: 18px;
+    color: #ffffff;
+    border: 0;
+    outline: none;
+    background: #294dcd;
+    cursor: pointer;
+}
+
