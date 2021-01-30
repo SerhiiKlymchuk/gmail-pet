@@ -11,7 +11,7 @@ public class ExceptionInterceptor {
     @ExceptionHandler(MessageException.class)
     public String messageException(MessageException e, RedirectAttributes attr) {
 
-        attr.addFlashAttribute("messageFailure", e.getMessage());
+        attr.addFlashAttribute("error", e.getMessage());
 
         return "redirect:/messages/new";
     }

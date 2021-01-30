@@ -18,8 +18,6 @@ import java.util.List;
 @Service
 public class MessageServiceImpl implements MessageService {
 
-    private static final Long GMAIL_SUPPORT_ID = 1L;
-
     private final MessageRepository messageRepository;
 
     private final UserRepository userRepository;
@@ -55,37 +53,20 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public void createMessage(MessageFormDto messageFormDto, Long senderUserId) {
 
-        try {
-            User receiverUser = userRepository
-                    .findByUsername(messageFormDto.getReceiverUsername())
-                    .orElseThrow(() -> new MessageException("Message wasn't delivered!!!"));
+        User receiverUser = userRepository
+                .findByUsername(messageFormDto.getReceiverUsername())
+                .orElseThrow(() -> new MessageException("Message wasn't delivered!!!"));
 
-            Message message = Message.builder()
-                    .senderUserId(senderUserId)
-                    .receiverUserId(receiverUser.getId())
-                    .subject(messageFormDto.getSubject())
-                    .content(messageFormDto.getContent())
-                    .reviewed(false)
-                    .date(LocalDateTime.now())
-                    .build();
+        Message message = Message.builder()
+                .senderUserId(senderUserId)
+                .receiverUserId(receiverUser.getId())
+                .subject(messageFormDto.getSubject())
+                .content(messageFormDto.getContent())
+                .reviewed(false)
+                .date(LocalDateTime.now())
+                .build();
 
-            messageRepository.save(message);
-
-        } catch (MessageException e) {
-            Message message = Message.builder()
-                    .senderUserId(GMAIL_SUPPORT_ID)
-                    .receiverUserId(senderUserId)
-                    .subject("Your message wasn't delivered!")
-                    .content("Hey, user with username `"
-                            + messageFormDto.getReceiverUsername()
-                            + "` was not found! And message wasn't delivered!")
-                    .reviewed(false)
-                    .date(LocalDateTime.now())
-                    .build();
-
-            messageRepository.save(message);
-        }
-
+        messageRepository.save(message);
     }
 
 }

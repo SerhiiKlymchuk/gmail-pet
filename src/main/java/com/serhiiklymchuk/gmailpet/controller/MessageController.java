@@ -50,7 +50,6 @@ public class MessageController {
         return "messages/new";
     }
 
-
     @PostMapping("/new")
     public String createMessage(@AuthenticationPrincipal User user, @Valid MessageFormDto messageFormDto, RedirectAttributes attr) {
 

@@ -6,8 +6,8 @@
     <title>Inbox</title>
 </head>
 <body id="inbox">
-    <#include "../include/header.ftl">
-    <#include "../include/sidebar.ftl">
+<#include "../include/header.ftl">
+<#include "../include/sidebar.ftl">
 
     <div class="messages_box">
         <ul>
@@ -24,7 +24,11 @@
                     <p class="content">
                         ${(msg.content?length > 50) ? then(msg.content?substring(0, 50)+'...', msg.content)}
                     </p>
-                    <p class="date">${msg.date.hour}:${msg.date.minute}</p>
+
+                    <p class="date">
+                        ${msg.date.hour}:
+                        ${(msg.date.minute?string?length<2) ? then('0'+msg.date.minute, msg.date.minute+'')}
+                    </p>
                 </li>
             </#list>
         </ul>
