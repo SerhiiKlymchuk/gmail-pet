@@ -51,22 +51,40 @@ public class MessageServiceImpl implements MessageService {
 
     @Async
     @Override
-    public void createMessage(MessageFormDto messageFormDto, Long senderUserId) {
+    public void createMessage(MessageFormDto messageFormDto, Long senderUserId){
 
-        User receiverUser = userRepository
-                .findByUsername(messageFormDto.getReceiverUsername())
-                .orElseThrow(() -> new MessageException("Receiver Was Not Found!!!"));
+        try {
+            User receiverUser = userRepository
+                    .findByUsername(messageFormDto.getReceiverUsername())
+                    .orElseThrow(() -> new MessageException("Message wasn't delivered!!!"));
 
-        Message message = Message.builder()
-                .senderUserId(senderUserId)
-                .receiverUserId(receiverUser.getId())
-                .subject(messageFormDto.getSubject())
-                .content(messageFormDto.getContent())
-                .reviewed(false)
-                .date(LocalDateTime.now())
-                .build();
+            Message message = Message.builder()
+                    .senderUserId(senderUserId)
+                    .receiverUserId(receiverUser.getId())
+                    .subject(messageFormDto.getSubject())
+                    .content(messageFormDto.getContent())
+                    .reviewed(false)
+                    .date(LocalDateTime.now())
+                    .build();
 
-        messageRepository.save(message);
+            messageRepository.save(message);
+
+        } catch (MessageException e) {
+
+            Message message = Message.builder()
+                    .senderUserId(1L)
+                    .receiverUserId(senderUserId)
+                    .subject("Your message wasn't delivered!")
+                    .content("Hey, user with username `"
+                            + messageFormDto.getReceiverUsername()
+                            + "` was not found! And message wasn't delivered!")
+                    .reviewed(false)
+                    .date(LocalDateTime.now())
+                    .build();
+
+            messageRepository.save(message);
+        }
+
     }
 
 }
