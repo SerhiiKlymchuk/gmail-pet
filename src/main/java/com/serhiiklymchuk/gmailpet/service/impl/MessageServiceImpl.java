@@ -18,6 +18,8 @@ import java.util.List;
 @Service
 public class MessageServiceImpl implements MessageService {
 
+    private static final Long GMAIL_SUPPORT_ID = 1L;
+
     private final MessageRepository messageRepository;
 
     private final UserRepository userRepository;
@@ -51,7 +53,7 @@ public class MessageServiceImpl implements MessageService {
 
     @Async
     @Override
-    public void createMessage(MessageFormDto messageFormDto, Long senderUserId){
+    public void createMessage(MessageFormDto messageFormDto, Long senderUserId) {
 
         try {
             User receiverUser = userRepository
@@ -70,9 +72,8 @@ public class MessageServiceImpl implements MessageService {
             messageRepository.save(message);
 
         } catch (MessageException e) {
-
             Message message = Message.builder()
-                    .senderUserId(1L)
+                    .senderUserId(GMAIL_SUPPORT_ID)
                     .receiverUserId(senderUserId)
                     .subject("Your message wasn't delivered!")
                     .content("Hey, user with username `"
