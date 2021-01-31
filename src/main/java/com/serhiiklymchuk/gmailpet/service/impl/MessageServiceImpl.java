@@ -66,6 +66,8 @@ public class MessageServiceImpl implements MessageService {
                 .date(LocalDateTime.now())
                 .build();
 
+
+
         messageRepository.save(message);
     }
 
