@@ -1,24 +1,28 @@
 package com.serhiiklymchuk.gmailpet.config;
 
-import com.serhiiklymchuk.gmailpet.domain.Message;
+import com.serhiiklymchuk.gmailpet.domain.User;
 import com.serhiiklymchuk.gmailpet.dto.MessageFormDto;
 import com.serhiiklymchuk.gmailpet.exception.SendMessageException;
-import com.serhiiklymchuk.gmailpet.repository.MessageRepository;
+import com.serhiiklymchuk.gmailpet.service.MessageService;
+import com.serhiiklymchuk.gmailpet.service.UserService;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
-
-import java.time.LocalDateTime;
 
 @Configuration
 public class AsyncConfig implements AsyncConfigurer {
 
     private static final Long GMAIL_SUPPORT_ID = 1L;
 
-    private final MessageRepository messageRepository;
+    private final UserService userService;
 
-    public AsyncConfig(MessageRepository messageRepository) {
-        this.messageRepository = messageRepository;
+    private final ApplicationContext context;
+
+    public AsyncConfig(UserService userService, ApplicationContext context) {
+
+        this.userService = userService;
+        this.context = context;
     }
 
     @Override
@@ -27,21 +31,20 @@ public class AsyncConfig implements AsyncConfigurer {
 
             if (throwable.getClass().equals(SendMessageException.class)) {
 
-                MessageFormDto messageFormDto = (MessageFormDto) obj[0];
-                Long senderUserId = (Long) obj[1];
+                MessageService messageService = context.getBean(MessageService.class);
 
-                Message message = Message.builder()
-                        .senderUserId(GMAIL_SUPPORT_ID)
-                        .receiverUserId(senderUserId)
+                MessageFormDto messageFormDto = (MessageFormDto) obj[0];
+                User senderUser = userService.findById((Long) obj[1]);
+
+                MessageFormDto responseMessageFormDto = MessageFormDto.builder()
+                        .receiverUsername(senderUser.getUsername())
                         .subject("Your message wasn't delivered!")
                         .content("Hey, user with username `"
                                 + messageFormDto.getReceiverUsername()
                                 + "` was not found! And message wasn't delivered!")
-                        .reviewed(false)
-                        .date(LocalDateTime.now())
                         .build();
 
-                messageRepository.save(message);
+                messageService.createMessage(responseMessageFormDto, GMAIL_SUPPORT_ID);
             }
         };
     }
