@@ -4,7 +4,7 @@ import com.serhiiklymchuk.gmailpet.domain.Message;
 import com.serhiiklymchuk.gmailpet.domain.User;
 import com.serhiiklymchuk.gmailpet.dto.MessageDto;
 import com.serhiiklymchuk.gmailpet.dto.MessageFormDto;
-import com.serhiiklymchuk.gmailpet.exception.MessageException;
+import com.serhiiklymchuk.gmailpet.exception.SendMessageException;
 import com.serhiiklymchuk.gmailpet.repository.MessageRepository;
 import com.serhiiklymchuk.gmailpet.repository.UserRepository;
 import com.serhiiklymchuk.gmailpet.service.MessageService;
@@ -55,7 +55,7 @@ public class MessageServiceImpl implements MessageService {
 
         User receiverUser = userRepository
                 .findByUsername(messageFormDto.getReceiverUsername())
-                .orElseThrow(() -> new MessageException("Message wasn't delivered!!!"));
+                .orElseThrow(() -> new SendMessageException("Message wasn't delivered!!!"));
 
         Message message = Message.builder()
                 .senderUserId(senderUserId)
@@ -65,8 +65,6 @@ public class MessageServiceImpl implements MessageService {
                 .reviewed(false)
                 .date(LocalDateTime.now())
                 .build();
-
-
 
         messageRepository.save(message);
     }

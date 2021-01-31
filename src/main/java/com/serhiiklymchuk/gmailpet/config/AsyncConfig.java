@@ -2,6 +2,7 @@ package com.serhiiklymchuk.gmailpet.config;
 
 import com.serhiiklymchuk.gmailpet.domain.Message;
 import com.serhiiklymchuk.gmailpet.dto.MessageFormDto;
+import com.serhiiklymchuk.gmailpet.exception.SendMessageException;
 import com.serhiiklymchuk.gmailpet.repository.MessageRepository;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +25,8 @@ public class AsyncConfig implements AsyncConfigurer {
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
         return (throwable, method, obj) -> {
 
-            if (method.getName().equals("createMessage")) {
+            if (throwable.getClass().equals(SendMessageException.class)) {
+
                 MessageFormDto messageFormDto = (MessageFormDto) obj[0];
                 Long senderUserId = (Long) obj[1];
 
