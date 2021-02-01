@@ -6,12 +6,13 @@ import com.serhiiklymchuk.gmailpet.exception.SendMessageException;
 import com.serhiiklymchuk.gmailpet.service.MessageService;
 import com.serhiiklymchuk.gmailpet.service.UserService;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 
 @Configuration
-public class AsyncConfig implements AsyncConfigurer {
+public class AsyncConfig implements AsyncConfigurer, CommandLineRunner {
 
     private static final Long GMAIL_SUPPORT_ID = 1L;
 
@@ -19,10 +20,12 @@ public class AsyncConfig implements AsyncConfigurer {
 
     private final ApplicationContext context;
 
+    private MessageService messageService;
+
     public AsyncConfig(UserService userService, ApplicationContext context) {
 
-        this.userService = userService;
         this.context = context;
+        this.userService = userService;
     }
 
     @Override
@@ -30,8 +33,6 @@ public class AsyncConfig implements AsyncConfigurer {
         return (throwable, method, obj) -> {
 
             if (throwable.getClass().equals(SendMessageException.class)) {
-
-                MessageService messageService = context.getBean(MessageService.class);
 
                 MessageFormDto messageFormDto = (MessageFormDto) obj[0];
                 User senderUser = userService.findById((Long) obj[1]);
@@ -49,4 +50,8 @@ public class AsyncConfig implements AsyncConfigurer {
         };
     }
 
+    @Override
+    public void run(String... args) {
+        this.messageService = context.getBean(MessageService.class);
+    }
 }
