@@ -3,7 +3,7 @@ package com.serhiiklymchuk.gmailpet.controller;
 import com.serhiiklymchuk.gmailpet.domain.User;
 import com.serhiiklymchuk.gmailpet.dto.MessageDto;
 import com.serhiiklymchuk.gmailpet.dto.MessageFormDto;
-import com.serhiiklymchuk.gmailpet.service.impl.MessageServiceImpl;
+import com.serhiiklymchuk.gmailpet.service.MessageService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,9 +19,9 @@ import java.util.List;
 @RequestMapping("/messages")
 public class MessageController {
 
-    private final MessageServiceImpl messageService;
+    private final MessageService messageService;
 
-    public MessageController(MessageServiceImpl messageService) {
+    public MessageController(MessageService messageService) {
         this.messageService = messageService;
     }
 

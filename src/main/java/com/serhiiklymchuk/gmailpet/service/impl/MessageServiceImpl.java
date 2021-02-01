@@ -4,11 +4,12 @@ import com.serhiiklymchuk.gmailpet.domain.Message;
 import com.serhiiklymchuk.gmailpet.domain.User;
 import com.serhiiklymchuk.gmailpet.dto.MessageDto;
 import com.serhiiklymchuk.gmailpet.dto.MessageFormDto;
-import com.serhiiklymchuk.gmailpet.exception.MessageException;
+import com.serhiiklymchuk.gmailpet.exception.SendMessageException;
 import com.serhiiklymchuk.gmailpet.repository.MessageRepository;
 import com.serhiiklymchuk.gmailpet.repository.UserRepository;
 import com.serhiiklymchuk.gmailpet.service.MessageService;
 import com.serhiiklymchuk.gmailpet.util.mapper.MessageToMessageDtoMapper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,6 +31,7 @@ public class MessageServiceImpl implements MessageService {
         this.messageToMessageDtoMapper = messageToMessageDtoMapper;
     }
 
+    @Override
     public List<MessageDto> getInboxMessages(User user) {
 
         List<Message> messages = messageRepository
@@ -38,6 +40,7 @@ public class MessageServiceImpl implements MessageService {
         return messageToMessageDtoMapper.map(messages);
     }
 
+    @Override
     public List<MessageDto> getOutboxMessages(User user) {
 
         List<Message> messages = messageRepository
@@ -46,12 +49,13 @@ public class MessageServiceImpl implements MessageService {
         return messageToMessageDtoMapper.map(messages);
     }
 
+    @Async
     @Override
     public void createMessage(MessageFormDto messageFormDto, Long senderUserId) {
 
         User receiverUser = userRepository
                 .findByUsername(messageFormDto.getReceiverUsername())
-                .orElseThrow(() -> new MessageException("Receiver Was Not Found!!!"));
+                .orElseThrow(() -> new SendMessageException("Message wasn't delivered!!!"));
 
         Message message = Message.builder()
                 .senderUserId(senderUserId)
