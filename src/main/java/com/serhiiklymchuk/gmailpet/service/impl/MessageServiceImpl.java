@@ -55,7 +55,7 @@ public class MessageServiceImpl implements MessageService {
 
         User receiverUser = userRepository
                 .findByUsername(messageFormDto.getReceiverUsername())
-                .orElseThrow(() -> new SendMessageException("Message wasn't delivered!!!"));
+                .orElseThrow(() -> new SendMessageException("Message was not sent!!!"));
 
         Message message = Message.builder()
                 .senderUserId(senderUserId)

@@ -4,6 +4,7 @@ import com.serhiiklymchuk.gmailpet.domain.User;
 import com.serhiiklymchuk.gmailpet.dto.MessageDto;
 import com.serhiiklymchuk.gmailpet.dto.MessageFormDto;
 import com.serhiiklymchuk.gmailpet.service.MessageService;
+import com.serhiiklymchuk.gmailpet.service.SendMessageService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,8 +22,11 @@ public class MessageController {
 
     private final MessageService messageService;
 
-    public MessageController(MessageService messageService) {
+    private final SendMessageService sendMessageService;
+
+    public MessageController(MessageService messageService, SendMessageService sendMessageService) {
         this.messageService = messageService;
+        this.sendMessageService = sendMessageService;
     }
 
     @GetMapping("/inbox")
@@ -51,9 +55,9 @@ public class MessageController {
     }
 
     @PostMapping("/new")
-    public String createMessage(@AuthenticationPrincipal User user, @Valid MessageFormDto messageFormDto, RedirectAttributes attr) {
+    public String createMessage(@AuthenticationPrincipal User user, @Valid MessageFormDto messageFormDto, RedirectAttributes attr) throws InterruptedException {
 
-        messageService.createMessage(messageFormDto, user.getId());
+        sendMessageService.sendMessage(messageFormDto, user.getId());
 
         attr.addFlashAttribute("messageSuccess", "Message Was Sent Successfully!!!");
 
