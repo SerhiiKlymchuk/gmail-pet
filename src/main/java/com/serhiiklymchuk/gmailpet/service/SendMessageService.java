@@ -4,5 +4,5 @@ import com.serhiiklymchuk.gmailpet.dto.MessageFormDto;
 
 public interface SendMessageService {
 
-    void sendMessage(MessageFormDto messageFormDto, Long senderUserId) throws InterruptedException;
+    void sendMessage(MessageFormDto messageFormDto, Long senderUserId);
 }

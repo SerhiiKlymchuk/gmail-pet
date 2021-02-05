@@ -55,7 +55,7 @@ public class MessageController {
     }
 
     @PostMapping("/new")
-    public String createMessage(@AuthenticationPrincipal User user, @Valid MessageFormDto messageFormDto, RedirectAttributes attr) throws InterruptedException {
+    public String createMessage(@AuthenticationPrincipal User user, @Valid MessageFormDto messageFormDto, RedirectAttributes attr) {
 
         sendMessageService.sendMessage(messageFormDto, user.getId());
 
