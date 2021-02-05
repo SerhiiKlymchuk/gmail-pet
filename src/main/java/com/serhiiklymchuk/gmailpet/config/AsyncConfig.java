@@ -33,9 +33,8 @@ public class AsyncConfig implements AsyncConfigurer, CommandLineRunner {
         return (throwable, method, obj) -> {
 
             if (throwable.getClass().equals(SendMessageException.class)) {
-
-                MessageFormDto messageFormDto = (MessageFormDto) obj[0];
                 User senderUser = userService.findById((Long) obj[1]);
+                MessageFormDto messageFormDto = (MessageFormDto) obj[0];
 
                 MessageFormDto responseMessageFormDto = MessageFormDto.builder()
                         .receiverUsername(senderUser.getUsername())

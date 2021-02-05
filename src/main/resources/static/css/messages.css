@@ -88,7 +88,7 @@ aside{
     display: flex;
     justify-content: space-between;
     padding: 5px 10px;
-    font-family: Arial;
+    font-family: sans-serif;
 }
 
 .menu li:hover{
@@ -120,7 +120,7 @@ aside{
     content: "+";
     font-size: 30px;
     font-weight: 600;
-    font-family: "Roboto Light";
+    font-family: "Roboto Light", sans-serif;
 }
 
 /*======= MESSAGES =======*/
@@ -146,7 +146,7 @@ aside{
 }
 
 .message_item:hover{
-    box-shadow: 0px 0px 4px #ffffff;
+    box-shadow: 0 0 4px #ffffff;
 }
 
 .message_item__marks{
@@ -216,8 +216,8 @@ aside{
 .form_header{
     width: 100%;
     height: 10%;
-    background-color: #202124;
-    padding: 0 3px;
+    background-color: #333333;
+    padding: 0 10px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -236,13 +236,39 @@ aside{
     height: 15%;
 }
 
-#form_send_to, #form_subject, #form_content{
+#receivers-box{
+    width: 100%;
+    padding: 10px 3px;
+
+    color: #000000;
+    border-bottom: 1px solid grey;
+    resize: none;
+    line-height: normal;
+}
+
+#receivers-box:empty:before {
+    color: grey;
+    font-size: 14px;
+    font-family: Consolas, serif;
+    content: attr(data-placeholder);
+}
+
+.form_send_to, #form_subject, #form_content{
     width: 100%;
     height: 10%;
     border: 0;
     padding: 0 3px;
     border-bottom: 1px solid grey;
     outline: none;
+}
+
+.form_send_to{
+    width: 30%;
+    height: 20px;
+    margin: .5% 1%;
+    border-radius: 5px;
+    border: 1px solid grey;
+    position: relative;
 }
 
 #form_content {
