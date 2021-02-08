@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class MessageServiceImpl implements MessageService {
@@ -47,6 +48,28 @@ public class MessageServiceImpl implements MessageService {
                 .findAllBySenderUserIdOrderByDateDesc(user.getId());
 
         return messageToMessageDtoMapper.map(messages);
+    }
+
+    @Override
+    public List<MessageDto> searchInboxMessages(User user, String searchQuery) {
+        List<MessageDto> inboxMessages = getInboxMessages(user);
+
+        return inboxMessages.stream()
+                .filter(e -> e
+                        .getSubject().toLowerCase()
+                        .contains(searchQuery.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<MessageDto> searchOutboxMessages(User user, String searchQuery) {
+        List<MessageDto> outboxMessages = getOutboxMessages(user);
+
+        return outboxMessages.stream()
+                .filter(e -> e
+                        .getSubject().toLowerCase()
+                        .contains(searchQuery.toLowerCase()))
+                .collect(Collectors.toList());
     }
 
     @Async

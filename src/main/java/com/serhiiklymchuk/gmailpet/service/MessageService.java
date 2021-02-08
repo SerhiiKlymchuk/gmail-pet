@@ -14,4 +14,8 @@ public interface MessageService {
 
     List<MessageDto> getOutboxMessages(User user);
 
+    List<MessageDto> searchInboxMessages(User user, String searchQuery);
+
+    List<MessageDto> searchOutboxMessages(User user, String searchQuery);
+
 }

@@ -4,6 +4,14 @@
         <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/logo_gmail_lockup_dark_1x_r2.png" alt="Logo">
     </div>
 
+    </div>
+
+    <form id="search-box" action="/messages/search" method="POST">
+        <input type="text" name="search_query" id="search_query" placeholder="Search mail!">
+        <input type="submit" value="Search">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+    </form>
+
     <div class="header-options">
         <p class="settings">&#9881;</p>
 

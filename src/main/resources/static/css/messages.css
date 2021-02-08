@@ -40,6 +40,10 @@ header{
     font-size: 23px;
 }
 
+#search-box{
+    align-self: center;
+}
+
 .header-options>*, .header-logo>*{
     cursor: pointer;
 }
@@ -134,10 +138,15 @@ aside{
     overflow-y: auto;
 }
 
+.messages_box >ul:after{
+    content: "";
+    padding: 75px 1px;
+}
+
 .message_item{
     width: 100%;
     border-bottom: 1px solid #5f5e5e;
-    padding: 8px 5px;
+    padding: 10px 5px;
     display: flex;
     flex-direction: row;
     justify-content: space-between;

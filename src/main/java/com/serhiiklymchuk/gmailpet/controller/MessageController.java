@@ -8,9 +8,7 @@ import com.serhiiklymchuk.gmailpet.service.SendMessageService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
@@ -47,6 +45,45 @@ public class MessageController {
         model.addAttribute("outboxMessages", outboxMessages);
 
         return "messages/outbox";
+    }
+
+    @GetMapping("/search-inbox")
+    public String searchInboxMessages(@AuthenticationPrincipal User user, Model model) {
+
+        String searchQuery = (String) model.getAttribute("searchQuery");
+
+        List<MessageDto> inboxMessagesSearch = messageService.searchInboxMessages(user, searchQuery);
+
+        model.addAttribute("inboxMessages", inboxMessagesSearch);
+
+        return "messages/inbox";
+    }
+
+    @GetMapping("/search-outbox")
+    public String searchOutboxMessages(@AuthenticationPrincipal User user, Model model) {
+
+        String searchQuery = (String) model.getAttribute("searchQuery");
+
+        List<MessageDto> outboxMessagesSearch = messageService.searchOutboxMessages(user, searchQuery);
+
+        model.addAttribute("outboxMessages", outboxMessagesSearch);
+
+        return "messages/outbox";
+    }
+
+
+    @PostMapping("/search")
+    public String searchMessages(@RequestHeader String referer, @RequestParam("search_query") String searchQuery, RedirectAttributes attr) {
+
+        attr.addFlashAttribute("searchQuery", searchQuery);
+
+        if (referer.endsWith("/inbox") || referer.endsWith("/search-inbox")) {
+            return "redirect:/messages/search-inbox";
+        } else if (referer.endsWith("/outbox") || referer.endsWith("/search-outbox")) {
+            return "redirect:/messages/search-outbox";
+        }
+
+        return "redirect:/messages/inbox";
     }
 
     @GetMapping("/new")
