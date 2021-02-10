@@ -6,12 +6,14 @@
     <title>Inbox</title>
 </head>
 <body id="inbox">
-<#include "../include/header.ftl">
-<#include "../include/sidebar.ftl">
+    <#include "../include/header.ftl">
+    <#include "../include/sidebar.ftl">
 
     <div class="messages_box">
+        <#include "../include/message_header.ftl">
+
         <ul>
-            <#list inboxMessages as msg>
+            <#list inboxMessages.content as msg>
                 <li class="message_item">
                     <div class="message_item__marks">
                         <span class="box">&#9744;</span>
@@ -33,5 +35,6 @@
             </#list>
         </ul>
     </div>
+
 </body>
 </html>

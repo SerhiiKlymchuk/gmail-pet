@@ -18,7 +18,9 @@
         </#if>
 
         <ul>
-            <#list outboxMessages as msg>
+            <#include "../include/message_header.ftl">
+
+            <#list outboxMessages.content as msg>
                 <li class="message_item">
                     <div class="message_item__marks">
                         <span class="box">&#9744;</span>
@@ -40,5 +42,6 @@
             </#list>
         </ul>
     </div>
+
 </body>
 </html>
