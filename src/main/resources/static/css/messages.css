@@ -81,6 +81,7 @@ header{
 
     cursor: pointer;
     transition: background .3s linear;
+    transform: rotate(-45deg);
 }
 
 #search_btn:hover{
