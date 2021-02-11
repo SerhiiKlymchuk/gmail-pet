@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -53,25 +52,30 @@ public class MessageController {
         return "messages/outbox";
     }
 
-    @GetMapping({"/search-inbox", "/search-outbox"})
-    public String searchMessages(@RequestHeader String referer, String searchQuery, Model model,
-                                    @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable,
-                                    @AuthenticationPrincipal User user) {
+    @GetMapping("/search-inbox")
+    public String searchInboxMessages(
+            @AuthenticationPrincipal User user, String searchQuery, Model model,
+            @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
 
+        Page<MessageDto> inboxMessagesSearch = messageService.searchInboxMessages(user, searchQuery, pageable);
+
+        model.addAttribute("inboxMessages", inboxMessagesSearch);
         model.addAttribute("searchQuery", searchQuery);
 
-        if (referer.contains("inbox")) {
+        return "messages/inbox";
+    }
 
-            Page<MessageDto> inboxMessagesSearch = messageService.searchInboxMessages(user, searchQuery, pageable);
-            model.addAttribute("inboxMessages", inboxMessagesSearch);
-            return "messages/inbox";
-        } else {
+    @GetMapping("/search-outbox")
+    public String searchOutboxMessages(
+            @AuthenticationPrincipal User user, String searchQuery, Model model,
+            @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
 
-            Page<MessageDto> outboxMessagesSearch = messageService.searchOutboxMessages(user, searchQuery, pageable);
-            model.addAttribute("outboxMessages", outboxMessagesSearch);
-            return "messages/outbox";
-        }
+        Page<MessageDto> outboxMessagesSearch = messageService.searchOutboxMessages(user, searchQuery, pageable);
 
+        model.addAttribute("outboxMessages", outboxMessagesSearch);
+        model.addAttribute("searchQuery", searchQuery);
+
+        return "messages/outbox";
     }
 
     @GetMapping("/new")
