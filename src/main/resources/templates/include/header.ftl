@@ -1,8 +1,15 @@
 <header>
+    <#assign sendUrl = (inboxMessages??) ? then("inbox", "outbox")>
+
     <div class="header-logo">
         <p>&#9776;</p>
         <img src="https://ssl.gstatic.com/ui/v1/icons/mail/rfr/logo_gmail_lockup_dark_1x_r2.png" alt="Logo">
     </div>
+
+    <form id="search-box" action="/messages/search-${sendUrl}">
+        <input type="text" name="searchQuery" id="search_query" autofocus placeholder="Search mail!">
+        <input type="submit" value="&#9906;" id="search_btn">
+    </form>
 
     <div class="header-options">
         <p class="settings">&#9881;</p>
@@ -16,4 +23,5 @@
             <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/><br>
         </form>
     </div>
+
 </header>

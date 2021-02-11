@@ -3,15 +3,19 @@ package com.serhiiklymchuk.gmailpet.service;
 import com.serhiiklymchuk.gmailpet.domain.User;
 import com.serhiiklymchuk.gmailpet.dto.MessageDto;
 import com.serhiiklymchuk.gmailpet.dto.MessageFormDto;
-
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface MessageService {
 
     void createMessage(MessageFormDto messageFormDto, Long senderUserId);
 
-    List<MessageDto> getInboxMessages(User user);
+    Page<MessageDto> getInboxMessages(User user, Pageable pageable);
 
-    List<MessageDto> getOutboxMessages(User user);
+    Page<MessageDto> getOutboxMessages(User user, Pageable pageable);
+
+    Page<MessageDto> searchInboxMessages(User user, String searchQuery, Pageable pageable);
+
+    Page<MessageDto> searchOutboxMessages(User user, String searchQuery, Pageable pageable);
 
 }

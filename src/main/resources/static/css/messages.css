@@ -40,6 +40,56 @@ header{
     font-size: 23px;
 }
 
+#search-box{
+    display: flex;
+    align-items: flex-end;
+    align-self: center;
+    margin-left: -36%;
+}
+
+#search_query{
+    height: 40px;
+    width: 400px;
+    padding: 0 1%;
+
+    border: 0;
+    border-radius: 5px;
+    outline: none;
+    font-size: 16px;
+    color: #ffff;
+    background: rgba(255,255,255,0.30);
+}
+
+#search_query:focus{
+    border:2px solid #cdcdcd;
+}
+
+#search_query::placeholder{
+    color: #cdcdcd;
+}
+
+#search_btn{
+    width: 40px;
+    margin-left: 1%;
+
+    background: transparent;
+    color: #ffffff;
+    font-size: 30px;
+    border: 0;
+    border-radius: 50%;
+    outline: none;
+
+    cursor: pointer;
+    transition: background .3s linear;
+    transform: rotate(-45deg);
+}
+
+#search_btn:hover{
+    background:#cdcdcd;
+    color: #202124;
+    font-weight: bold;
+}
+
 .header-options>*, .header-logo>*{
     cursor: pointer;
 }
@@ -123,15 +173,73 @@ aside{
     font-family: "Roboto Light", sans-serif;
 }
 
+/*======= MESSAGE HEADER ========*/
+
+.message_header{
+    padding: 12px 30px 12px 6px;
+    font-size: 14px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    box-shadow: -2px 0 5px red;
+}
+
+.message_header__checkbox{
+    font-size: 18px;
+}
+
+.message_header__checkbox .refresh{
+    margin-left: 5px;
+}
+
+.message_header__nav{
+    display: flex;
+    align-items: center;
+}
+
+.message_header__nav input{
+    margin-left: 15px;
+    border: 0;
+    outline: none;
+
+    font-size: 24px;
+    color: #ffffff;
+    cursor: pointer;
+    background-color: transparent;
+    transform: translateY(-10%);
+}
+
+.message_header__nav__stats{
+    padding-right: 20px;
+}
+
+#disabled{
+    color: grey;
+    pointer-events: none;
+}
+
+
 /*======= MESSAGES =======*/
 
 .messages_box{
     position: absolute;
     right: 0;
-    border: 1px solid red;
+    border-right: 1px solid red;
+
+    box-shadow: 0 3.2em 5px red;
     width: 82%;
     height: 100%;
     overflow-y: auto;
+}
+
+.messages_box > ul{
+    border-left: 1px;
+}
+.messages_box >ul:after{
+    content: "";
+    padding: 75px 1px;
 }
 
 .message_item{
