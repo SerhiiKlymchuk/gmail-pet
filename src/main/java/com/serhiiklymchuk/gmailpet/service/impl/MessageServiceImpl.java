@@ -9,6 +9,9 @@ import com.serhiiklymchuk.gmailpet.repository.MessageRepository;
 import com.serhiiklymchuk.gmailpet.repository.UserRepository;
 import com.serhiiklymchuk.gmailpet.service.MessageService;
 import com.serhiiklymchuk.gmailpet.util.mapper.MessageToMessageDtoMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -32,21 +35,51 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public List<MessageDto> getInboxMessages(User user) {
+    public Page<MessageDto> getInboxMessages(User user, Pageable pageable) {
 
         List<Message> messages = messageRepository
-                .findAllByReceiverUserIdOrderByDateDesc(user.getId());
+                .findAllByReceiverUserIdOrderByDateDesc(user.getId(), pageable);
 
-        return messageToMessageDtoMapper.map(messages);
+        return new PageImpl<>(
+                messageToMessageDtoMapper.map(messages), pageable,
+                messageRepository.countAllByReceiverUserId(user.getId())
+        );
     }
 
     @Override
-    public List<MessageDto> getOutboxMessages(User user) {
+    public Page<MessageDto> getOutboxMessages(User user, Pageable pageable) {
 
         List<Message> messages = messageRepository
-                .findAllBySenderUserIdOrderByDateDesc(user.getId());
+                .findAllBySenderUserIdOrderByDateDesc(user.getId(), pageable);
 
-        return messageToMessageDtoMapper.map(messages);
+        return new PageImpl<>(
+                messageToMessageDtoMapper.map(messages), pageable,
+                messageRepository.countAllBySenderUserId(user.getId())
+        );
+    }
+
+    @Override
+    public Page<MessageDto> searchInboxMessages(User user, String searchQuery, Pageable pageable) {
+
+        List<MessageDto> inboxMessages = messageToMessageDtoMapper.map(
+                messageRepository.findAllByReceiverUserIdAndSubjectContains(user.getId(), searchQuery, pageable)
+        );
+
+        return new PageImpl<>(inboxMessages, pageable,
+                messageRepository.countAllByReceiverUserIdAndSubjectContains(user.getId(), searchQuery)
+        );
+    }
+
+    @Override
+    public Page<MessageDto> searchOutboxMessages(User user, String searchQuery, Pageable pageable) {
+
+        List<MessageDto> inboxMessages = messageToMessageDtoMapper.map(
+                messageRepository.findAllBySenderUserIdAndSubjectContains(user.getId(), searchQuery, pageable)
+        );
+
+        return new PageImpl<>(inboxMessages, pageable,
+                messageRepository.countAllBySenderUserIdAndSubjectContains(user.getId(), searchQuery)
+        );
     }
 
     @Async

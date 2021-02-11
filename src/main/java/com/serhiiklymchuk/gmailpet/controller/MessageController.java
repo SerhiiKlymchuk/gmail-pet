@@ -5,6 +5,10 @@ import com.serhiiklymchuk.gmailpet.dto.MessageDto;
 import com.serhiiklymchuk.gmailpet.dto.MessageFormDto;
 import com.serhiiklymchuk.gmailpet.service.MessageService;
 import com.serhiiklymchuk.gmailpet.service.SendMessageService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @Controller
 @RequestMapping("/messages")
@@ -30,9 +33,9 @@ public class MessageController {
     }
 
     @GetMapping("/inbox")
-    public String getInboxMessages(@AuthenticationPrincipal User user, Model model) {
+    public String getInboxMessages(@AuthenticationPrincipal User user, Model model, @PageableDefault Pageable pageable) {
 
-        List<MessageDto> inboxMessages = messageService.getInboxMessages(user);
+        Page<MessageDto> inboxMessages = messageService.getInboxMessages(user, pageable);
 
         model.addAttribute("inboxMessages", inboxMessages);
 
@@ -40,11 +43,37 @@ public class MessageController {
     }
 
     @GetMapping("/outbox")
-    public String getOutboxMessages(@AuthenticationPrincipal User user, Model model) {
+    public String getOutboxMessages(@AuthenticationPrincipal User user, Model model, @PageableDefault Pageable pageable) {
 
-        List<MessageDto> outboxMessages = messageService.getOutboxMessages(user);
+        Page<MessageDto> outboxMessages = messageService.getOutboxMessages(user, pageable);
 
         model.addAttribute("outboxMessages", outboxMessages);
+
+        return "messages/outbox";
+    }
+
+    @GetMapping("/search-inbox")
+    public String searchInboxMessages(
+            @AuthenticationPrincipal User user, String searchQuery, Model model,
+            @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        Page<MessageDto> inboxMessagesSearch = messageService.searchInboxMessages(user, searchQuery, pageable);
+
+        model.addAttribute("inboxMessages", inboxMessagesSearch);
+        model.addAttribute("searchQuery", searchQuery);
+
+        return "messages/inbox";
+    }
+
+    @GetMapping("/search-outbox")
+    public String searchOutboxMessages(
+            @AuthenticationPrincipal User user, String searchQuery, Model model,
+            @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        Page<MessageDto> outboxMessagesSearch = messageService.searchOutboxMessages(user, searchQuery, pageable);
+
+        model.addAttribute("outboxMessages", outboxMessagesSearch);
+        model.addAttribute("searchQuery", searchQuery);
 
         return "messages/outbox";
     }
