@@ -21,6 +21,7 @@ public class MessageToMessageDtoMapper {
     private MessageDto map(Message message, User receiverUser, User senderUser) {
 
         return MessageDto.builder()
+                .id(message.getId())
                 .receiverUsername(receiverUser.getUsername())
                 .senderUsername(senderUser.getUsername())
                 .subject(message.getSubject())

@@ -3,6 +3,7 @@
 <head>
     <#include "../include/meta.ftl">
     <link rel="stylesheet" href="/css/messages.css">
+    <script defer src="/js/delete_message.js"></script>
     <title>Outbox</title>
 </head>
 <body id="outbox">
@@ -38,6 +39,11 @@
                         ${msg.date.hour}:
                         ${(msg.date.minute?string?length<2) ? then('0'+msg.date.minute, msg.date.minute+'')}
                     </p>
+
+                    <form id="form_delete" action="/messages/delete/${msg.id}" method="POST">
+                        <i class="fas fa-trash" title="Are you sure?"></i>
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/><br>
+                    </form>
                 </li>
             </#list>
         </ul>
