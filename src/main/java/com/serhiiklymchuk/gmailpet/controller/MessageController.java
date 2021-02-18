@@ -13,6 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -33,21 +34,27 @@ public class MessageController {
     }
 
     @GetMapping("/inbox")
-    public String getInboxMessages(@AuthenticationPrincipal User user, Model model, @PageableDefault Pageable pageable) {
+    public String getInboxMessages(
+            @AuthenticationPrincipal User user, Model model,
+            @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
 
         Page<MessageDto> inboxMessages = messageService.getInboxMessages(user, pageable);
 
-        model.addAttribute("inboxMessages", inboxMessages);
+        model.addAttribute("messages", inboxMessages);
+        model.addAttribute("sendUrl", "inbox");
 
         return "messages/inbox";
     }
 
     @GetMapping("/outbox")
-    public String getOutboxMessages(@AuthenticationPrincipal User user, Model model, @PageableDefault Pageable pageable) {
+    public String getOutboxMessages(
+            @AuthenticationPrincipal User user, Model model,
+            @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
 
         Page<MessageDto> outboxMessages = messageService.getOutboxMessages(user, pageable);
 
-        model.addAttribute("outboxMessages", outboxMessages);
+        model.addAttribute("messages", outboxMessages);
+        model.addAttribute("sendUrl", "outbox");
 
         return "messages/outbox";
     }
@@ -59,8 +66,9 @@ public class MessageController {
 
         Page<MessageDto> inboxMessagesSearch = messageService.searchInboxMessages(user, searchQuery, pageable);
 
-        model.addAttribute("inboxMessages", inboxMessagesSearch);
+        model.addAttribute("messages", inboxMessagesSearch);
         model.addAttribute("searchQuery", searchQuery);
+        model.addAttribute("sendUrl", "search-inbox");
 
         return "messages/inbox";
     }
@@ -72,8 +80,9 @@ public class MessageController {
 
         Page<MessageDto> outboxMessagesSearch = messageService.searchOutboxMessages(user, searchQuery, pageable);
 
-        model.addAttribute("outboxMessages", outboxMessagesSearch);
+        model.addAttribute("messages", outboxMessagesSearch);
         model.addAttribute("searchQuery", searchQuery);
+        model.addAttribute("sendUrl", "search-outbox");
 
         return "messages/outbox";
     }
@@ -93,4 +102,31 @@ public class MessageController {
         return "redirect:/messages/outbox";
     }
 
+    @GetMapping("/recycle-bin")
+    public String recycleBin(@AuthenticationPrincipal User user, Model model,
+                             @PageableDefault(sort = "date", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        Page<MessageDto> recycleBinMessages = messageService.getRecycleBinMessages(user, pageable);
+
+        model.addAttribute("messages", recycleBinMessages);
+        model.addAttribute("sendUrl", "recycle-bin");
+
+        return "messages/recycle";
+    }
+
+    @PostMapping("/recycle-bin/{id}")
+    public String moveToRecycle(@AuthenticationPrincipal User user, @PathVariable Long id, RedirectAttributes attr) {
+
+        MessageDto message = messageService.findById(user, id);
+        messageService.recycleMessage(user, message);
+
+        attr.addFlashAttribute("messageSuccess", "Message was successfully moved to recycle bin!");
+
+        if (user.getUsername().equals(message.getReceiverUsername())) {
+            return "redirect:/messages/inbox";
+        }
+
+        return "redirect:/messages/outbox";
+
+    }
 }

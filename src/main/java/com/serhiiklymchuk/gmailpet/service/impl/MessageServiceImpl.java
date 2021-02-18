@@ -1,9 +1,11 @@
 package com.serhiiklymchuk.gmailpet.service.impl;
 
 import com.serhiiklymchuk.gmailpet.domain.Message;
+import com.serhiiklymchuk.gmailpet.domain.MessageStatus;
 import com.serhiiklymchuk.gmailpet.domain.User;
 import com.serhiiklymchuk.gmailpet.dto.MessageDto;
 import com.serhiiklymchuk.gmailpet.dto.MessageFormDto;
+import com.serhiiklymchuk.gmailpet.exception.MessageException;
 import com.serhiiklymchuk.gmailpet.exception.SendMessageException;
 import com.serhiiklymchuk.gmailpet.repository.MessageRepository;
 import com.serhiiklymchuk.gmailpet.repository.UserRepository;
@@ -38,11 +40,12 @@ public class MessageServiceImpl implements MessageService {
     public Page<MessageDto> getInboxMessages(User user, Pageable pageable) {
 
         List<Message> messages = messageRepository
-                .findAllByReceiverUserIdOrderByDateDesc(user.getId(), pageable);
+                .findAllByReceiverUserIdAndReceiveStatus(
+                        user.getId(), MessageStatus.RECEIVED, pageable);
 
         return new PageImpl<>(
                 messageToMessageDtoMapper.map(messages), pageable,
-                messageRepository.countAllByReceiverUserId(user.getId())
+                messageRepository.countAllByReceiverUserIdAndReceiveStatus(user.getId(), MessageStatus.RECEIVED)
         );
     }
 
@@ -50,11 +53,27 @@ public class MessageServiceImpl implements MessageService {
     public Page<MessageDto> getOutboxMessages(User user, Pageable pageable) {
 
         List<Message> messages = messageRepository
-                .findAllBySenderUserIdOrderByDateDesc(user.getId(), pageable);
+                .findAllBySenderUserIdAndSendStatus(
+                        user.getId(), MessageStatus.SENT, pageable);
 
         return new PageImpl<>(
                 messageToMessageDtoMapper.map(messages), pageable,
-                messageRepository.countAllBySenderUserId(user.getId())
+                messageRepository.countAllBySenderUserIdAndSendStatus(user.getId(), MessageStatus.SENT)
+        );
+    }
+
+    @Override
+    public Page<MessageDto> getRecycleBinMessages(User user, Pageable pageable) {
+        List<Message> messages = messageRepository
+                .findAllBySenderUserIdAndSendStatusOrReceiverUserIdAndReceiveStatus(
+                        user.getId(), MessageStatus.ON_RECYCLE, user.getId(), MessageStatus.ON_RECYCLE, pageable
+                );
+
+
+        return new PageImpl<>(
+                messageToMessageDtoMapper.map(messages), pageable,
+                messageRepository.countAllBySenderUserIdAndSendStatusOrReceiverUserIdAndReceiveStatus(
+                        user.getId(), MessageStatus.ON_RECYCLE, user.getId(), MessageStatus.ON_RECYCLE)
         );
     }
 
@@ -62,11 +81,13 @@ public class MessageServiceImpl implements MessageService {
     public Page<MessageDto> searchInboxMessages(User user, String searchQuery, Pageable pageable) {
 
         List<MessageDto> inboxMessages = messageToMessageDtoMapper.map(
-                messageRepository.findAllByReceiverUserIdAndSubjectContains(user.getId(), searchQuery, pageable)
+                messageRepository.findAllByReceiverUserIdAndSubjectContainsAndReceiveStatus(
+                        user.getId(), searchQuery, MessageStatus.RECEIVED, pageable)
         );
 
         return new PageImpl<>(inboxMessages, pageable,
-                messageRepository.countAllByReceiverUserIdAndSubjectContains(user.getId(), searchQuery)
+                messageRepository.countAllByReceiverUserIdAndSubjectContainsAndReceiveStatus(
+                        user.getId(), searchQuery, MessageStatus.RECEIVED)
         );
     }
 
@@ -74,11 +95,13 @@ public class MessageServiceImpl implements MessageService {
     public Page<MessageDto> searchOutboxMessages(User user, String searchQuery, Pageable pageable) {
 
         List<MessageDto> inboxMessages = messageToMessageDtoMapper.map(
-                messageRepository.findAllBySenderUserIdAndSubjectContains(user.getId(), searchQuery, pageable)
+                messageRepository.findAllBySenderUserIdAndSubjectContainsAndSendStatus(
+                        user.getId(), searchQuery, MessageStatus.SENT, pageable)
         );
 
         return new PageImpl<>(inboxMessages, pageable,
-                messageRepository.countAllBySenderUserIdAndSubjectContains(user.getId(), searchQuery)
+                messageRepository.countAllBySenderUserIdAndSubjectContainsAndSendStatus(
+                        user.getId(), searchQuery, MessageStatus.SENT)
         );
     }
 
@@ -95,11 +118,36 @@ public class MessageServiceImpl implements MessageService {
                 .receiverUserId(receiverUser.getId())
                 .subject(messageFormDto.getSubject())
                 .content(messageFormDto.getContent())
+                .receiveStatus(MessageStatus.RECEIVED)
+                .sendStatus(MessageStatus.SENT)
                 .reviewed(false)
                 .date(LocalDateTime.now())
                 .build();
 
         messageRepository.save(message);
+    }
+
+    @Override
+    public MessageDto findById(User user, Long messageId) {
+
+        List<MessageDto> message = messageToMessageDtoMapper.map(List.of(
+                messageRepository
+                        .findById(messageId)
+                        .orElseThrow(() -> new MessageException("Message was not found!")))
+        );
+
+        return message.get(0);
+    }
+
+
+    @Override
+    public void recycleMessage(User user, MessageDto message) {
+
+        if (user.getUsername().equals(message.getReceiverUsername())) {
+            messageRepository.updateReceiveStatus(MessageStatus.ON_RECYCLE, message.getId());
+        } else if (user.getUsername().equals(message.getSenderUsername())) {
+            messageRepository.updateSendStatus(MessageStatus.ON_RECYCLE, message.getId());
+        }
     }
 
 }

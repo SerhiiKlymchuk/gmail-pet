@@ -1,5 +1,6 @@
 package com.serhiiklymchuk.gmailpet.dto;
 
+import com.serhiiklymchuk.gmailpet.domain.MessageStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,6 +23,10 @@ public class MessageDto {
     private String subject;
 
     private String content;
+
+    private MessageStatus receiveStatus;
+
+    private MessageStatus sendStatus;
 
     private boolean reviewed;
 

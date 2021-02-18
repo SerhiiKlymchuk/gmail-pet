@@ -21,10 +21,13 @@ public class MessageToMessageDtoMapper {
     private MessageDto map(Message message, User receiverUser, User senderUser) {
 
         return MessageDto.builder()
+                .id(message.getId())
                 .receiverUsername(receiverUser.getUsername())
                 .senderUsername(senderUser.getUsername())
                 .subject(message.getSubject())
                 .content(message.getContent())
+                .receiveStatus(message.getReceiveStatus())
+                .sendStatus(message.getSendStatus())
                 .reviewed(message.isReviewed())
                 .date(message.getDate())
                 .build();

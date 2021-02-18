@@ -25,6 +25,10 @@ public class Message {
 
     private String content;
 
+    private MessageStatus receiveStatus;
+
+    private MessageStatus sendStatus;
+
     private boolean reviewed;
 
     private LocalDateTime date;
