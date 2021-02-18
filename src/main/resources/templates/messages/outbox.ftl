@@ -7,21 +7,14 @@
     <title>Outbox</title>
 </head>
 <body id="outbox">
-<#include "../include/header.ftl">
-<#include "../include/sidebar.ftl">
+    <#include "../include/header.ftl">
+    <#include "../include/sidebar.ftl">
 
     <div class="messages_box">
-
-        <#if messageSuccess??>
-            <li id="success">
-                <p>${messageSuccess}</p>
-            </li>
-        </#if>
+        <#include "../include/message_header.ftl">
 
         <ul>
-            <#include "../include/message_header.ftl">
-
-            <#list outboxMessages.content as msg>
+            <#list messages.content as msg>
                 <li class="message_item">
                     <div class="message_item__marks">
                         <span class="box">&#9744;</span>
@@ -40,13 +33,14 @@
                         ${(msg.date.minute?string?length<2) ? then('0'+msg.date.minute, msg.date.minute+'')}
                     </p>
 
-                    <form id="form_delete" action="/messages/delete/${msg.id}" method="POST">
+                    <form id="form_delete" action="/messages/recycle-bin/${msg.id}" method="POST">
                         <i class="fas fa-trash" title="Are you sure?"></i>
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/><br>
                     </form>
                 </li>
             </#list>
         </ul>
+
     </div>
 
 </body>

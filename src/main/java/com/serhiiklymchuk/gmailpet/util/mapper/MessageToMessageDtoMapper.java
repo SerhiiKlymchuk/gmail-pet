@@ -26,6 +26,8 @@ public class MessageToMessageDtoMapper {
                 .senderUsername(senderUser.getUsername())
                 .subject(message.getSubject())
                 .content(message.getContent())
+                .receiveStatus(message.getReceiveStatus())
+                .sendStatus(message.getSendStatus())
                 .reviewed(message.isReviewed())
                 .date(message.getDate())
                 .build();

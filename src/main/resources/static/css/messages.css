@@ -146,8 +146,10 @@ aside{
     border-radius: 5px;
 }
 
-
-#inbox .menu__inbox, #outbox .menu__outbox{
+#recycle #search-box{
+    display: none;
+}
+#inbox .menu__inbox, #outbox .menu__outbox, #recycle .menu__recycle{
     background-color: rgba(255,255,255,0.30);
     border-radius: 5px;
 }
@@ -251,6 +253,7 @@ aside{
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
+    text-align: left;
     cursor: pointer;
 }
 
@@ -271,23 +274,43 @@ aside{
 
 .message_item .subject{
     width: 25%;
-    text-align: left;
 }
 
 .message_item .content{
     width: 50%;
-    text-align: left;
 }
 
 .message_item .date{
     width: 5%;
-    text-align: left;
+}
+
+#recycle .messages_box >ul:after{
+    content: "";
+    padding: 0;
+}
+
+#recycle .message_item .content{
+    width: 40%;
+}
+
+#recycle .message_item .date{
+    width: 7%;
+    text-align: center;
+}
+
+#recycle .sender{
+    width: 130px;
+}
+
+#recycle .message_item__marks{
+    width: 35%;
 }
 
 .message_item .fa-trash{
-    padding: 7px 12px;
+    padding: 0 8px;
     color: red;
     position: absolute;
+    font-size: 18px;
     top: 50%;
     right: 1.5em;
     opacity: 0;
